@@ -1,0 +1,82 @@
+.item {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 5px;
+    background: transparent;
+    border-radius: 10px;
+    transition: all .3s ease-out;
+}
+
+.item:hover {
+    background: #f0f0f0;
+}
+
+.item__left {
+    display: flex;
+}
+
+.item__left_img {
+    border-radius: 5px;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    background: #f0f0f0;
+}
+
+
+
+
+.item__center {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.item__center_name {
+    font-size: 14px;
+    color: rgba(37, 37, 37, 1);
+    font-weight: 600;
+    text-align: left;
+}
+
+.item__center_meta {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    font-size: 12px;
+    color: rgba(37, 37, 37, 0.75);
+    font-weight: 500;
+}
+
+.item__right {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.item__right_like {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 50px;
+    font-size: 16px;
+    transition: all .3s ease-out;
+}
+
+.item:hover .item__right_like {
+    background: #fff;
+    cursor: pointer;
+}
+
+.item:hover .item__right_like:hover {
+    background: #ff4848;
+}
