@@ -1,50 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import SearchItem from "./components/searchItem/SearchItem";
+import { searchAlbumsData } from "./spotifyApi";
+import { DataStore } from "./dataStore";
 
 function App() {
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [searchData, setSearchData] = useState([]);
-
-  async function getToken() {
-    const clientId = "123cf0a0417247469d4fcbb8b7ec89c1";
-    const clientSecret = "5301e8e323874ec3a88bfae30b253c7c";
-
-    const response = await fetch("https://accounts.spotify.com/api/token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: "Basic " + btoa(clientId + ":" + clientSecret),
-      },
-      body: "grant_type=client_credentials",
-    });
-
-    const data = await response.json();
-    return data.access_token; // вот его потом используем в других запросах
-  }
-
-  async function searchAlbumsData() {
-    setLoading(true);
-
-    const token = await getToken();
-    const response = await fetch(
-      `https://api.spotify.com/v1/search?q=${encodeURIComponent(
-        searchValue
-      )}&type=album&limit=20`,
-      {
-        headers: { Authorization: "Bearer " + token },
-      }
-    );
-    const data = await response.json();
-    console.log(data.albums.items);
-    setSearchData(data.albums.items);
-    setLoading(false);
-  }
-
-  const searchAlbums = (e) => {
+  const [page, setPage] = useState("liked");
+  const searchAlbums = async (e) => {
     e.preventDefault();
-    searchAlbumsData();
+    setPage("search");
+    setLoading(true);
+    setSearchData(await searchAlbumsData(searchValue));
+    setLoading(false);
   };
 
   return (
@@ -63,11 +33,42 @@ function App() {
         </div>
         <div className="main-box flex flex-col gap-[15px]">
           {loading && <div>Загрузка</div>}
-          {searchData.map((album) => (
-            <SearchItem key={album.id} data={album}></SearchItem>
-          ))}
+          {page == "search" && (
+            <>
+              <h2>Поиск по запросу: {searchValue}</h2>
+              <div className="albums">
+                {searchData.map((album) => (
+                  <SearchItem key={album.id} data={album}></SearchItem>
+                ))}
+              </div>
+            </>
+          )}
+          {page == "liked" && (
+            <>
+              <h2>Любимые треки</h2>
+              <div className="albums">
+                {DataStore.getUserData().albums.map((album) => (
+                  <SearchItem key={album.id} data={album}></SearchItem>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
+      <nav className="menu__box">
+        <button
+          className={page == "liked" ? "active" : ""}
+          onClick={() => setPage("liked")}
+        >
+          Любимые альбомы
+        </button>
+        <button
+          className={page == "search" ? "active" : ""}
+          onClick={() => setPage("search")}
+        >
+          Поиск
+        </button>
+      </nav>
     </>
   );
 }

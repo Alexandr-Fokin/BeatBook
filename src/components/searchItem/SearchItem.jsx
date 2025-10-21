@@ -1,4 +1,7 @@
 import styles from "./SearchItem.module.css";
+import { DataStore } from "../../dataStore";
+import { getToken } from "../../spotifyApi";
+
 export default function SearchItem(props) {
   let dataType =
     props.data.type == "album"
@@ -7,6 +10,59 @@ export default function SearchItem(props) {
       ? "Сингл"
       : "Что-то другое";
   let releaseYear = new Date(props.data.release_date).getFullYear();
+
+  function addAlbum(album, folder) {
+    let addedAlbums = DataStore.getUserData();
+    console.log(addedAlbums);
+    addedAlbums.albums.push({
+      id: album.id,
+      name: album.name,
+      artists: [...album.artists],
+      images: [...album.images],
+      type: album.type,
+      release: album.release_date,
+      addedAt: new Date(),
+      folder: folder || "liked",
+    });
+    DataStore.saveUserData(addedAlbums);
+    console.log(DataStore.getUserData());
+    addTracks(getAlbumsTracks(album.id), album.id);
+  }
+  async function getAlbumsTracks(id) {
+    const token = await getToken();
+    const response = await fetch(
+      `https://api.spotify.com/v1/albums/${id}/tracks`,
+      {
+        headers: { Authorization: "Bearer " + token },
+      }
+    );
+    const data = await response.json();
+    console.log("треки из альбома - ", data.items);
+    return data.items; // массив треков
+  }
+  async function addTracks(tracks, albumId) {
+    let addedAlbums = DataStore.getUserData();
+    let albumTracks = await tracks;
+
+    albumTracks.map((track) => {
+      addedAlbums.tracks.push({
+        id: track.id,
+        albumId: albumId,
+        name: track.name,
+        artists: [...track.artists],
+        duration: track.duration_ms,
+        track_number: track.track_number,
+        rating: 0,
+        comment: "",
+        addedAt: new Date(),
+        explicit: track.explicit,
+        external_url: track.external_urls.spotify,
+      });
+    });
+    DataStore.saveUserData(addedAlbums);
+    console.log(DataStore.getUserData());
+  }
+
   return (
     <li className={styles.item}>
       <div className={styles.item__left}>
@@ -53,7 +109,14 @@ export default function SearchItem(props) {
         </div>
       </div>
       <div className={styles.item__right}>
-        <a className={styles.item__right_like}>❤️</a>
+        <a
+          className={styles.item__right_like}
+          onClick={() => {
+            addAlbum(props.data);
+          }}
+        >
+          ❤️
+        </a>
       </div>
     </li>
   );
