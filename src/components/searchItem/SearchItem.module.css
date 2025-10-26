@@ -4,14 +4,17 @@
     gap: 10px;
     justify-content: flex-start;
     align-items: center;
-    padding: 5px;
+    padding: 10px;
     background: transparent;
-    border-radius: 10px;
+    border-radius: 15px;
     transition: all .3s ease-out;
+    background: transparent;
+    width: 100%;
 }
 
+
 .item:hover {
-    background: #f0f0f0;
+    background: rgba(255, 255, 255, 0.75);
 }
 
 .item__left {
@@ -60,23 +63,31 @@
 }
 
 .item__right_like {
-    width: 35px;
-    height: 35px;
+    width: 20px;
+    height: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #f0f0f0;
+    background: rgba(37, 37, 37, 0.5);
     border-radius: 50px;
     font-size: 16px;
     transition: all .3s ease-out;
-}
-
-.item:hover .item__right_like {
-    background: #fff;
     cursor: pointer;
 }
 
+.added .item__right_like {
+    background: #38A65D;
+}
+
+.item__right_like img {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+}
+
+
+
 .item:hover .item__right_like:hover {
-    background: #ff4848;
+    background: #252525;
 }
