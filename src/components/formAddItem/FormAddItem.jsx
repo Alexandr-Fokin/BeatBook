@@ -1,8 +1,8 @@
-import styles from "./FormAddAlbum.module.css";
+import styles from "./FormAddItem.module.css";
 import FormFolderItem from "../formFolderItem/FormFolderItem";
 import { useAppContext } from "../appContext/AppContext";
 
-export default function FormAddAlbum({ album }) {
+export default function FormAddItem({ item }) {
   const { userData, setUserData } = useAppContext();
 
   return (
@@ -10,31 +10,26 @@ export default function FormAddAlbum({ album }) {
       <div className={styles.add_album__info}>
         <img
           className={styles.add_album__info_left}
-          src={album.images[2].url}
+          src={item.type == "album" ? item.images[2].url : item.album.images[2].url}
           alt=""
         />
         <div className={styles.add_album__info_right}>
-          <div className={styles.add_album__info_name}>{album.name}</div>
+          <div className={styles.add_album__info_name}>{item.name}</div>
         </div>
       </div>
       <div className={styles.add_album__tools}>
         {/* <label htmlFor="" className={styles.add_album__tools_search}>
           <input type="text" placeholder="Поиск" />
         </label> */}
-        <div className={styles.add_album__tools_add_folder}>
+        {/* <div className={styles.add_album__tools_add_folder}>
           <a href="" className={styles.add_album__tools_add_folder_btn}>
             Создать папку
           </a>
-        </div>
+        </div> */}
       </div>
       <div className={styles.add_album__folders}>
         {userData.folders.map((folder) => (
-          <FormFolderItem
-            folder={folder}
-            album={album}
-            userData={userData}
-            setUserData={setUserData}
-          ></FormFolderItem>
+          <FormFolderItem folder={folder} item={item}></FormFolderItem>
         ))}
       </div>
     </div>

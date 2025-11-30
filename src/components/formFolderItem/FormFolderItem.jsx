@@ -3,59 +3,39 @@ import plusImg from "../../img/plus-svg.svg";
 import styles from "./FormFolderItem.module.css";
 import { getToken } from "../../spotifyApi";
 import { DataStore } from "../../dataStore";
+import { useAppContext } from "../appContext/AppContext";
 
-export default function FormFolderItem({ folder, album, userData, setUserData }) {
-  function ToggleAlbumToFolder(album, folderId) {
+export default function FormFolderItem({ folder, item }) {
+  console.log("FormFolderItem, item -", item);
+  const { userData, setUserData } = useAppContext();
+  async function ToggleItemToFolder(item, folderToAdd) {
+    console.log("ToggleItemToFolder, item - ", item);
     let updatedData = { ...userData };
-    let addedAlbum = updatedData.albums.find((a) => a.id === album.id);
+    let addedItem = updatedData.added.find((i) => i.id === item.id);
 
-    if (addedAlbum) {
+    if (addedItem) {
       // если уже есть в этой папке → убираем (toggle)
-      if (addedAlbum.folder.includes(folderId)) {
-        addedAlbum.folder = addedAlbum.folder.filter((f) => f !== folderId);
-        if (addedAlbum.folder.length == 0) removeAlbum(addedAlbum);
+      if (addedItem.folder.some((f) => f.id == folderToAdd.id)) {
+        addedItem.folder = addedItem.folder.filter((f) => f.id !== folderToAdd.id);
+        if (addedItem.folder.length == 0) removeItem(addedItem);
       } else {
-        addedAlbum.folder.push(folderId);
+        addedItem.folder.push({ id: folderToAdd.id, order: lengthItemsInFolder(folder) + 1 });
       }
       DataStore.saveUserData(updatedData);
       setUserData(updatedData);
     } else {
-      // если альбом ещё не добавлен
-      addAlbum(album, folderId);
-      addTracks(getAlbumsTracks(album.id), album.id);
+      // если элемент ещё не добавлен
+      await addItem(item, folderToAdd);
     }
   }
 
-  function addAlbum(album, folderId) {
-    let userData = DataStore.getUserData();
-    userData.albums.push({
-      id: album.id,
-      name: album.name,
-      artists: [...album.artists],
-      images: [...album.images],
-      type: album.type,
-      release_date: album.release_date,
-      addedAt: new Date(),
-      folder: [folderId],
-    });
-    DataStore.saveUserData(userData);
-    setUserData(userData);
-    console.log("добавлен альбом", DataStore.getUserData());
-    addTracks(getAlbumsTracks(album.id), album.id);
-  }
-  function removeAlbum(album) {
-    setUserData((prev) => {
-      let updatedAlbums = prev.albums.filter((a) => a.id !== album.id);
-      let updatedTracks = prev.tracks.filter((t) => t.albumId !== album.id);
-      let updatedData = {
-        ...prev,
-        albums: updatedAlbums,
-        tracks: updatedTracks,
-      };
-      DataStore.saveUserData(updatedData);
-      console.log("после удаления - ", updatedData);
-      return updatedData;
-    });
+  function lengthItemsInFolder(folder) {
+    userData.added.reduce((acc, item) => {
+      if (item.folder.some((f) => f.id == folder.id)) {
+        return acc + 1;
+      }
+      return acc;
+    }, 0);
   }
 
   async function getAlbumsTracks(id) {
@@ -67,12 +47,12 @@ export default function FormFolderItem({ folder, album, userData, setUserData })
     console.log("треки из альбома - ", data.items);
     return data.items; // массив треков
   }
-  async function addTracks(tracks, albumId) {
-    let userData = DataStore.getUserData();
+  async function getTracksArray(tracks, albumId) {
+    let tracksArray = [];
     let albumTracks = await tracks;
 
     albumTracks.map((track) => {
-      userData.tracks.push({
+      tracksArray.push({
         id: track.id,
         albumId: albumId,
         name: track.name,
@@ -86,16 +66,70 @@ export default function FormFolderItem({ folder, album, userData, setUserData })
         external_url: track.external_urls.spotify,
       });
     });
-    DataStore.saveUserData(userData);
-    setUserData(userData);
-    console.log("добавлены треки", DataStore.getUserData());
+    console.log("добавлены треки", tracksArray);
+    return tracksArray;
+  }
+
+  async function addItem(item, folder) {
+    let updatedData = { ...userData };
+
+    if (item.type === "album") {
+      const albumTracks = await getTracksArray(getAlbumsTracks(item.id), item.id);
+      updatedData.added.push({
+        type: "album",
+        album_type: item.album_type,
+        id: item.id,
+        external_urls: { ...item.external_urls },
+        name: item.name,
+        artists: [...item.artists],
+        images: [...item.images],
+        release_date: item.release_date,
+        addedAt: new Date(),
+        folder: [{ id: folder.id, order: lengthItemsInFolder(folder) + 1 }],
+        tracks: albumTracks,
+        rating: 0,
+        comment: "",
+      });
+    }
+    if (item.type === "track") {
+      updatedData.added.push({
+        type: "track",
+        album: { ...item.album },
+        id: item.id,
+        external_urls: { ...item.external_urls },
+        name: item.name,
+        artists: [...item.artists],
+        images: [...item.album.images],
+        release_date: item.album.release_date,
+        addedAt: new Date(),
+        folder: [{ id: folder.id, order: lengthItemsInFolder(folder) + 1 }],
+        rating: 0,
+        comment: "",
+      });
+    }
+
+    DataStore.saveUserData(updatedData);
+    setUserData(updatedData);
+    console.log("добавлен альбом в локалку", DataStore.getUserData());
+  }
+  function removeItem(item) {
+    setUserData((prev) => {
+      let updatedItems = prev.added.filter((i) => i.id !== item.id);
+      let updatedData = {
+        ...prev,
+        added: updatedItems,
+      };
+      DataStore.saveUserData(updatedData);
+      console.log("после удаления - ", updatedData);
+      return updatedData;
+    });
   }
 
   return (
-    <div className={styles.folder__item} onClick={() => ToggleAlbumToFolder(album, folder.id)}>
+    <div className={styles.folder__item} onClick={() => ToggleItemToFolder(item, folder)}>
       <div>{folder.name}</div>
       <a>
-        {userData.albums.find((addedAlbum) => addedAlbum.id == album.id)?.folder.includes(folder.id) ? (
+        {userData.added.find((addedItem) => addedItem.id == item.id)?.folder.some((f) => f.id == folder.id) ? (
           <div className={`${styles.folder__item_like} ${styles.added}`}>
             <img src={checkImg}></img>
           </div>

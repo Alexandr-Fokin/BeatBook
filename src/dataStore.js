@@ -7,11 +7,10 @@ export const DataStore = {
             // ignore parse error
         }
         const defaultData = {
-            albums: [],
-            tracks: [],
+            added: [],
             folders: [
-                { id: "liked", name: "Любимые альбомы" },
-                { id: "test", name: "Тестовая папка" },
+                { id: "liked", name: "Любимые альбомы", parentId: null, icon: 2 },
+                { id: "test", name: "Тестовая папка", parentId: null, icon: 1 },
             ],
         };
         localStorage.setItem("userData", JSON.stringify(defaultData));

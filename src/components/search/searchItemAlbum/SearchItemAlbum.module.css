@@ -1,0 +1,106 @@
+.item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0px;
+    border-radius: 20px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 0px;
+    background: transparent;
+    transition: all .3s ease-out;
+    padding: 8px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.item:hover .item__img {
+    box-shadow: 0px 6px 15px 0px rgba(37, 37, 37, 0.45);
+    transform: scale(1.007);
+}
+
+.item__top {
+    position: relative;
+    height: fit-content;
+    display: flex;
+    width: 100%;
+}
+
+.item__img {
+    width: 100%;
+    height: fit-content;
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    background: rgba(37, 37, 37, 0.05);
+    border-radius: 15px;
+    background: #f0f0f0;
+    transition: all .3s ease-out;
+    box-shadow: 0px 2px 15px 0px rgba(37, 37, 37, 0.15);
+}
+
+.item__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px 4px 4px 4px;
+    width: 100%;
+}
+
+.item__name {
+    font-size: 13px;
+    color: rgba(37, 37, 37, 1);
+    font-weight: 600;
+    max-width: 90%;
+    width: 100%;
+}
+
+.item__meta {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    font-size: 11px;
+    color: rgba(37, 37, 37, 0.75);
+    font-weight: 500;
+}
+
+.item__like {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: 0px 2px 15px 0px rgba(37, 37, 37, 0.25);
+    backdrop-filter: blur(5px);
+    border-radius: 50px;
+    font-size: 16px;
+    transition: all .3s ease-out;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.item:hover .item__like {
+    transform: scale(1.25);
+}
+
+
+.added .item__like {
+    background: #38A65D;
+}
+
+.item__like img {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    filter: invert(1);
+    opacity: 0.65;
+}
+
+.added .item__like img {
+    filter: none;
+    opacity: 1;
+}

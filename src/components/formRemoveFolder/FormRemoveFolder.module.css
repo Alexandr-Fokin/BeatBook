@@ -1,0 +1,22 @@
+.form {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.form_msg_title {
+    max-width: 90%;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: left;
+    color: #252525;
+}
+
+.form_msg_title span {
+    font-style: italic;
+    display: block;
+    opacity: 0.75;
+    font-weight: 500;
+}

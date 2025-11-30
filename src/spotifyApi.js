@@ -17,14 +17,15 @@ export async function getToken() {
 export async function searchAlbumsData(searchValue) {
     const token = await getToken();
     const response = await fetch(
-        `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+        `
+        https://api.spotify.com/v1/search?q=${encodeURIComponent(
             searchValue
-        )}&type=album&limit=20`,
+        )}&type=album%2Ctrack&market=ES&limit=30&include_external=audio&locale=en-US`,
         {
             headers: { Authorization: "Bearer " + token },
         }
     );
     const data = await response.json();
-    console.log(data.albums.items);
-    return (data.albums.items)
+    console.log(data);
+    return (data)
 }
