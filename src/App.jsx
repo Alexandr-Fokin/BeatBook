@@ -86,6 +86,14 @@ function App() {
         <button className={page == "search" ? styles.active : ""} onClick={() => activateSearch()}>
           Поиск
         </button>
+        <button
+          onClick={() => {
+            localStorage.removeItem("userData");
+            window.location.reload();
+          }}
+        >
+          Удалить данные
+        </button>
       </nav>
       <Popup></Popup>
     </div>

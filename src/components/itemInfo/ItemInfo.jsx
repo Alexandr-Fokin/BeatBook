@@ -9,14 +9,15 @@ export default function ItemInfo({ item }) {
       </div>
       <div className="item__info">
         <div className="item__note"></div>
-        {item.type == "album"}
-        <div className="item__tracks">
-          {item.tracks.map((track) => (
-            <div className="item__track" key={track.id}>
-              {track.name}
-            </div>
-          ))}
-        </div>
+        {item.type == "album" && (
+          <div className="item__tracks">
+            {item.tracks.map((track) => (
+              <div className="item__track" key={track.id}>
+                {track.name}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
