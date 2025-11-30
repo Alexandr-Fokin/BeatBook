@@ -1,6 +1,6 @@
 import { useAppContext } from "../appContext/AppContext";
 import styles from "./Sidebar.module.css";
-import FormAddFolder from "../formAddFolder/formAddFolder";
+import FormAddFolder from "../formAddFolder/FormAddFolder";
 import { useState } from "react";
 import { Icons } from "../../icons/icons";
 
