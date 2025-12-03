@@ -1,33 +1,33 @@
-name: Build and Deploy Vite
+name: Deploy Vite project to REG.RU
 
 on:
   push:
-    branches:
-      - main # триггер при пуше в main
+    branches: ["main"]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: 18
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      - name: Build project
-        run: npm run build # или vite build
+      - name: Build
+        run: npm run build
 
-      - name: Deploy to build branch
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
-          github_token: ${{ secrets.GT_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: build # или gh-pages
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: dist
+          server-dir: /
