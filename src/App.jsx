@@ -94,7 +94,9 @@ function App() {
         >
           Очистить все
         </button>
-        <button href="https://trello.com/b/1E4arcJO/beatbook-roadmap">RoadMap</button>
+        <a target="_blank" href="https://trello.com/b/1E4arcJO/beatbook-roadmap">
+          RoadMap
+        </a>
       </nav>
       <Popup></Popup>
     </div>
