@@ -141,7 +141,8 @@ body {
   transform: translateX(-50%) scale(1.01);
 }
 
-.menu__box button {
+.menu__box button,
+.menu__box a {
   padding: 8px 20px;
   border-radius: 20px;
   cursor: pointer;
