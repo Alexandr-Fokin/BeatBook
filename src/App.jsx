@@ -92,8 +92,9 @@ function App() {
             window.location.reload();
           }}
         >
-          Удалить данные
+          Очистить все
         </button>
+        <button href="https://trello.com/b/1E4arcJO/beatbook-roadmap">RoadMap</button>
       </nav>
       <Popup></Popup>
     </div>
