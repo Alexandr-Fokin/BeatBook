@@ -100,11 +100,11 @@
     color: #252525;
 }
 
-.sidebar__folder.active {
+.sidebar__folder:global(.active) {
     background: #e9e9e9;
 }
 
-.sidebar__folder.active svg path {
+.sidebar__folder:global(.active) svg path {
     fill: #38A65D;
 }
 

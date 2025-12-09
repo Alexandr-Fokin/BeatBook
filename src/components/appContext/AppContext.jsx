@@ -6,14 +6,8 @@ const AppContext = createContext(null);
 export function AppProvider({ children }) {
   const [popup, setPopup] = useState(null);
   const [userData, setUserData] = useState(DataStore.getUserData());
-  const [page, setPage] = useState("added");
-  const [pageItem, setPageItem] = useState(null);
 
-  return (
-    <AppContext.Provider value={{ popup, setPopup, userData, setUserData, page, setPage, pageItem, setPageItem }}>
-      {children}
-    </AppContext.Provider>
-  );
+  return <AppContext.Provider value={{ popup, setPopup, userData, setUserData }}>{children}</AppContext.Provider>;
 }
 
 export function useAppContext() {

@@ -9,7 +9,7 @@ export const DataStore = {
         const defaultData = {
             added: [],
             folders: [
-                { id: "liked", name: "Любимые альбомы", parentId: null, icon: 2 },
+                { id: "liked", name: "Избранное", parentId: null, icon: 2 },
                 { id: "test", name: "Тестовая папка", parentId: null, icon: 1 },
             ],
         };

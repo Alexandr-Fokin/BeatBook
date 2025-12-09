@@ -74,11 +74,34 @@
     cursor: pointer;
 }
 
+.header__home_btn svg path {
+    transition: all .3s ease-out;
+}
+
 .header__home_btn:hover {
     transform: scale(1.05);
 }
 
+.header__home_btn:hover svg path {
+    fill-opacity: 1;
+}
+
 .header__home_btn svg {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
+}
+
+.header__home_btn:global(.active) {
+    background: #38A65D;
+    cursor: default;
+}
+
+.header__home_btn:global(.active) svg path {
+    fill: #fff;
+    fill-opacity: 1;
+}
+
+.header__home_btn:global(.active):hover {
+    transform: none;
+
 }

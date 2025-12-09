@@ -1,13 +1,13 @@
 import { useAppContext } from "../appContext/AppContext";
 import styles from "./ItemsGrid.module.css";
-import { DataStore } from "../../dataStore";
 import checkImg from "../../img/check-svg.svg";
 import plusImg from "../../img/plus-svg.svg";
 import { findItemType } from "../../hooks";
 import FormAddItem from "../formAddItem/FormAddItem";
+import { Link } from "react-router-dom";
 
 export default function ItemsGrid({ items }) {
-  const { popup, setPopup, setPage, pageItem, setPageItem, userData } = useAppContext();
+  const { setPopup, userData } = useAppContext();
   console.log("айтемы для демонстрации -", items);
 
   function getArtistsList(item) {
@@ -26,19 +26,14 @@ export default function ItemsGrid({ items }) {
       return false;
     }
   }
-  function openItem(item) {
-    setPage("item");
-    setPageItem(item);
-    console.log(pageItem);
-  }
 
   return (
     <div className={styles.items_grid}>
       {items.map((item) => (
-        <li
+        <Link
           key={item.id}
           className={styles.items_grid__item + (albumIsAdded(item) ? ` ${styles.added}` : "")}
-          onClick={() => openItem(item)}
+          to={`/item/${item.id}`}
         >
           <div className={styles.items_grid__item_top}>
             <a
@@ -58,7 +53,7 @@ export default function ItemsGrid({ items }) {
               <span>{getArtistsList(item)}</span> - <span>{findItemType(item)}</span>
             </div>
           </div>
-        </li>
+        </Link>
       ))}
     </div>
   );

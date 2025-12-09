@@ -1,24 +1,34 @@
-import { useState } from "react";
 import SearchItemAlbum from "./searchItemAlbum/SearchItemAlbum";
 import SearchItemTrack from "./searchItemTrack/SearchItemTrack";
 import styles from "./Search.module.css";
+import { useLoaderData, useSearchParams } from "react-router-dom";
 
-export default function Search({ data }) {
-  const [searchType, setSearchType] = useState("all");
+export default function Search() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchType = searchParams.get("type");
 
-  console.log("search data", data);
+  const searchData = useLoaderData();
+  console.log(searchData);
 
-  if (data.length == 0) {
+  const changeSearchType = (type) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("type", type);
+    setSearchParams(newParams);
+  };
+
+  console.log("search data", searchData);
+
+  if (!searchData) {
     return <div className={styles.search}></div>;
   }
-  if (data.error) {
+  if (searchData.error) {
     return (
       <div className={styles.search}>
-        <div className="search__error_message">{data.error.message}</div>
+        <div className="search__error_message">{searchData.error.message}</div>
       </div>
     );
   }
-  if (data.albums.items.length == 0 && data.tracks.items.length == 0) {
+  if (searchData.albums.items.length == 0 && searchData.tracks.items.length == 0) {
     return (
       <div className="search">
         <div className="search__not_found_message">Ничего не найдено</div>
@@ -30,19 +40,19 @@ export default function Search({ data }) {
       <div className={styles.search__types}>
         <a
           className={`${styles.search__type} ${searchType == "all" ? styles.active : ""}`}
-          onClick={() => setSearchType("all")}
+          onClick={() => changeSearchType("all")}
         >
           Все
         </a>
         <a
           className={`${styles.search__type} ${searchType == "albums" ? styles.active : ""}`}
-          onClick={() => setSearchType("albums")}
+          onClick={() => changeSearchType("albums")}
         >
           Альбомы
         </a>
         <a
           className={`${styles.search__type} ${searchType == "tracks" ? styles.active : ""}`}
-          onClick={() => setSearchType("tracks")}
+          onClick={() => changeSearchType("tracks")}
         >
           Треки
         </a>
@@ -51,22 +61,22 @@ export default function Search({ data }) {
       {searchType == "all" && (
         <div className={styles.search__type_all}>
           <div className="albums flex flex-col">
-            <a onClick={() => setSearchType("albums")} className={styles.search__title_link}>
+            <a onClick={() => changeSearchType("albums")} className={styles.search__title_link}>
               Альбомы
             </a>
             <div className={`${styles.search__albums_items} flex flex-col`}>
-              {data.albums.items.map((album, i) => {
-                if (i < Math.floor(document.querySelector(".main-box").clientWidth / 200)) {
+              {searchData.albums.items.map((album, i) => {
+                if (i < 6) {
                   return <SearchItemAlbum key={album.id} data={album}></SearchItemAlbum>;
                 }
               })}
             </div>
           </div>
           <div className="albums flex flex-col">
-            <a onClick={() => setSearchType("tracks")} className={styles.search__title_link}>
+            <a onClick={() => changeSearchType("tracks")} className={styles.search__title_link}>
               Треки
             </a>
-            {data.tracks.items.map((track, i) => {
+            {searchData.tracks.items.map((track, i) => {
               if (i < 5) {
                 return <SearchItemTrack key={track.id} data={track}></SearchItemTrack>;
               }
@@ -78,7 +88,7 @@ export default function Search({ data }) {
         <div className="albums flex flex-col">
           <h3 className="default_title_md text-theme-black ml-[10px] mb-[5px]">Альбомы</h3>
           <div className={`${styles.search__albums_items} flex flex-col`}>
-            {data.albums.items.map((album) => (
+            {searchData.albums.items.map((album) => (
               <SearchItemAlbum key={album.id} data={album}></SearchItemAlbum>
             ))}
           </div>
@@ -87,7 +97,7 @@ export default function Search({ data }) {
       {searchType == "tracks" && (
         <div className="albums flex flex-col">
           <h3 className="default_title_md text-theme-black ml-[10px] mb-[5px]">Треки</h3>
-          {data.tracks.items.map((track) => (
+          {searchData.tracks.items.map((track) => (
             <SearchItemTrack key={track.id} data={track}></SearchItemTrack>
           ))}
         </div>

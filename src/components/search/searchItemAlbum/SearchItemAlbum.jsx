@@ -7,9 +7,8 @@ import plusImg from "../../../img/plus-svg.svg";
 import { findItemType } from "../../../hooks";
 
 export default function SearchItemAlbum({ data }) {
-  const { popup, setPopup, userData } = useAppContext();
+  const { setPopup, userData } = useAppContext();
   let dataType = findItemType(data);
-  let releaseYear = new Date(data.release_date).getFullYear();
 
   function openPopupAddAlbum(album) {
     setPopup(<FormAddItem item={album}></FormAddItem>);

@@ -6,7 +6,7 @@ import checkImg from "../../../img/check-svg.svg";
 import plusImg from "../../../img/plus-svg.svg";
 
 export default function SearchItemTrack(props) {
-  const { popup, setPopup } = useAppContext();
+  const { setPopup } = useAppContext();
   let dataType =
     props.data.type == "album"
       ? "Альбом"

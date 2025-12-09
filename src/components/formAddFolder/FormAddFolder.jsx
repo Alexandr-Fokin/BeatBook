@@ -3,24 +3,27 @@ import styles from "./FormAddFolder.module.css";
 import { useAppContext } from "../appContext/AppContext";
 import { DataStore } from "../../dataStore";
 import { Icons } from "../../icons/icons";
+import { nanoid } from "nanoid";
+import { useNavigate } from "react-router-dom";
 
 export default function FormAddFolder({ folderForm, setFolderForm }) {
   const [folderName, setFolderName] = useState("");
   const [folderIcon, setFolderIcon] = useState(1);
   const [folderIconMenu, setFolderIconMenu] = useState(false);
-  const { userData, setUserData, setPage } = useAppContext();
+  const { userData, setUserData } = useAppContext();
   const Icon = Icons[folderIcon];
+  const navigate = useNavigate();
 
   function addFolder(e) {
     e.preventDefault();
     let updatedData = { ...userData };
-    let folderId = crypto.randomUUID();
+    let folderId = nanoid(22);
     updatedData.folders.push({ id: folderId, name: folderName, parentId: null, icon: folderIcon });
     setUserData(updatedData);
     DataStore.saveUserData(updatedData);
     setFolderName("");
     setFolderForm(false);
-    setPage(folderId);
+    navigate(`/folder/${folderId}`);
     setFolderIcon(1);
   }
   function selectFolderIcon(key) {

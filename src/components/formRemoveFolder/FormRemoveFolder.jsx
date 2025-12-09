@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { DataStore } from "../../dataStore";
 import { useAppContext } from "../appContext/AppContext";
 import styles from "./FormRemoveFolder.module.css";
 
 export default function FormRemoveFolder({ folder }) {
-  const { setPopup, userData, setUserData, setPage } = useAppContext();
+  const { setPopup, userData, setUserData } = useAppContext();
+  const navigate = useNavigate();
   function removeFolder(folderToRemove) {
     let updatedItems = userData.added
       .map((item) => ({
@@ -26,7 +28,7 @@ export default function FormRemoveFolder({ folder }) {
     setUserData(updatedData);
 
     setPopup(null);
-    setPage("added");
+    navigate("/");
   }
 
   return (

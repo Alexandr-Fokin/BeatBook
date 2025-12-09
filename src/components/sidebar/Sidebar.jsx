@@ -3,11 +3,13 @@ import styles from "./Sidebar.module.css";
 import FormAddFolder from "../formAddFolder/FormAddFolder";
 import { useState } from "react";
 import { Icons } from "../../icons/icons";
+import { NavLink } from "react-router-dom";
 
 export default function Sidebar() {
-  let { userData, setUserData, page, setPage, setPopup } = useAppContext();
+  let { userData } = useAppContext();
   const IconAll = Icons[99];
   const [folderForm, setFolderForm] = useState(false);
+
   function toggleFormAddFolder() {
     setFolderForm((prev) => !prev);
   }
@@ -27,28 +29,17 @@ export default function Sidebar() {
         <FormAddFolder folderForm={folderForm} setFolderForm={setFolderForm}></FormAddFolder>
       </div>
       <div className={styles.sidebar__folders}>
-        <a
-          onClick={() => {
-            setPage("added");
-          }}
-          className={`${styles.sidebar__folder} ${"added" == page ? styles.active : ""}`}
-        >
+        <NavLink to="/added" className={styles.sidebar__folder}>
           <IconAll />
-          Все альбомы
-        </a>
+          Вся медиатека
+        </NavLink>
         {userData.folders.map((folder) => {
           const IconFolder = Icons[folder.icon];
           return (
-            <a
-              onClick={() => {
-                setPage(folder.id);
-              }}
-              key={folder.id}
-              className={`${styles.sidebar__folder} ${folder.id == page ? styles.active : ""}`}
-            >
+            <NavLink to={`/folder/${folder.id}`} key={folder.id} className={`${styles.sidebar__folder}`}>
               <IconFolder />
               {folder.name}
-            </a>
+            </NavLink>
           );
         })}
       </div>
